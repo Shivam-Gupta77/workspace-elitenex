@@ -1,5 +1,6 @@
 package day_6;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -23,9 +24,12 @@ public class Account {
     }
 
     public void displayBankTransactions(){
+
         System.out.println("  == Your full transaction history ==");
+        SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy HH:mm");
         for(BankAccountTransaction statement : bankAccountTransactions){
-            System.out.println(" |" + statement.getBankTransactionType() + " | " + statement.getTransactionDate() + " | " + statement.getAmount() + "|");
+            String formattedDate = formatter.format(statement.getTransactionDate());
+            System.out.println(" |" + statement.getBankTransactionType() + " | " + formattedDate + " | " + statement.getAmount() + "|");
         }
     }
 

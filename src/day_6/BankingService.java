@@ -30,7 +30,7 @@ public class BankingService implements IBankingService{
             newAccount = new Account(id, bankName, accountNumber, holderName, accountType, initialBalance);
             System.out.println("Account Created Successfully Account Number: " + newAccount.getAccountNumber());
         }else{
-            System.out.println("Insufficient Balance to create new Account");
+            throw new AmountCannotBeNegative("Insufficient Balance to create new Account");
         }
 
         accounts.add(newAccount);
@@ -53,7 +53,7 @@ public class BankingService implements IBankingService{
             System.out.println("Your Balance: " + account.getBalance());
 
         }else{
-            System.out.println("Something went wrong");
+            throw new AccountNotExistExcepiton("There is not account with this account number: " + accountNumber);
         }
     }
 
@@ -75,18 +75,19 @@ public class BankingService implements IBankingService{
 
     @Override
     public void withdraw(String accountNumber, double amount) {
-        for(Account account: accounts){
-            if(accountNumber.equals(account.getAccountNumber())){
+        Account account = accountExistOrNot(accountNumber);
 
-                if(amount > account.getBalance()){
-                    System.out.println("Amount is greater than current balance. Your current balance: " + account.getBalance());
-                }
-                account.withdraw(amount);
-                System.out.println("Withdraw successfully");
-
-            }else{
-                System.out.println("no account with this accountNumber");
+        if(account != null){
+            if(amount < 0){
+                throw new AmountCannotBeNegative("Amount cannot be negative or zero");
             }
+            if(amount > account.getBalance()){
+                throw new AmountIsGreaterThanCurrentBalance("Amount is greater than current balance. Your current balance: " + account.getBalance());
+            }
+            account.withdraw(amount);
+            System.out.println("Withdraw successfully");
+        }else{
+            throw new AccountNotExistExcepiton("There is not account with this account number: " + accountNumber);
         }
     }
 
@@ -99,18 +100,18 @@ public class BankingService implements IBankingService{
             from.withdraw(amount);
             to.deposit(amount);
         }else{
-            System.out.println("Something is wrong");
+            throw new AccountNotExistExcepiton("Account not exist with these account numbers");
         }
     }
 
     @Override
     public void statement(String accountNumber) {
-        for(Account account: accounts){
-            if(accountNumber.equals(account.getAccountNumber())){
-                account.displayBankTransactions();
-            }else{
-                System.out.println("no account with this accountNumber");
-            }
+        Account account = accountExistOrNot(accountNumber);
+
+        if(account != null){
+            account.displayBankTransactions();
+        }else{
+            throw new AccountNotExistExcepiton("There is not account with this account number: " + accountNumber);
         }
     }
 

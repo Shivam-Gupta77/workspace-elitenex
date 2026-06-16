@@ -14,3 +14,9 @@ class AmountCannotBeNegative extends RuntimeException{
         super(message);
     }
 }
+
+class AmountIsGreaterThanCurrentBalance extends  RuntimeException{
+    public AmountIsGreaterThanCurrentBalance(String message){
+        super(message);
+    }
+}
