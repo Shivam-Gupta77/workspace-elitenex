@@ -6,5 +6,8 @@ public interface IBankingService {
     void showDetails(String accountNumber);
     void deposit(String accountNumber, double amount);
     void withdraw(String accountNumber, double amount);
+    void transfer(String fromAccount, String toAccount, double amount);
     void statement(String accountNumber);
+
+    Account accountExistOrNot(String accountNumber);
 }

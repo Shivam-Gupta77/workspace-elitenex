@@ -43,36 +43,33 @@ public class BankingService implements IBankingService{
 
     @Override
     public void showDetails(String accountNumber) {
-        for(Account account: accounts){
-            if(accountNumber.equals(account.getAccountNumber())){
-                System.out.println("\n=== Your Account details ===");
-                System.out.println("Bank Name: " + account.getBankName());
-                System.out.println("Account Holder Name: " + account.getHolderName());
-                System.out.println("Account Number: " + account.getAccountNumber());
-                System.out.println("Account Type: " + account.getAccountType());
-                System.out.println("Your Balance: " + account.getBalance());
+        Account account = accountExistOrNot(accountNumber);
+        if(account != null){
+            System.out.println("\n=== Your Account details ===");
+            System.out.println("Bank Name: " + account.getBankName());
+            System.out.println("Account Holder Name: " + account.getHolderName());
+            System.out.println("Account Number: " + account.getAccountNumber());
+            System.out.println("Account Type: " + account.getAccountType());
+            System.out.println("Your Balance: " + account.getBalance());
 
-            }else{
-                System.out.println("no account with this accountNumber");
-            }
+        }else{
+            System.out.println("Something went wrong");
         }
     }
 
     @Override
     public void deposit(String accountNumber, double amount) {
-        for(Account account: accounts){
-            if(accountNumber.equals(account.getAccountNumber())){
+        Account account = accountExistOrNot(accountNumber);
 
-                if(amount > 0){
-                    account.deposit(amount);
-                    System.out.println("Deposit successfully");
-                }else{
-                    System.out.println("Amount should be more than 0");
-                }
-
+        if(account != null){
+            if(amount > 0){
+                account.deposit(amount);
+                System.out.println("Deposit successfully");
             }else{
-                System.out.println("no account with this accountNumber");
+                throw new AmountCannotBeNegative("Amount cannot be negative or zero");
             }
+        }else{
+            throw new AccountNotExistExcepiton("There is not account with this account number: " + accountNumber);
         }
     }
 
@@ -94,6 +91,19 @@ public class BankingService implements IBankingService{
     }
 
     @Override
+    public void transfer(String fromAccount, String toAccount, double amount) {
+        Account from = accountExistOrNot(fromAccount);
+        Account to = accountExistOrNot(toAccount);
+
+        if(from != null && to != null){
+            from.withdraw(amount);
+            to.deposit(amount);
+        }else{
+            System.out.println("Something is wrong");
+        }
+    }
+
+    @Override
     public void statement(String accountNumber) {
         for(Account account: accounts){
             if(accountNumber.equals(account.getAccountNumber())){
@@ -102,5 +112,17 @@ public class BankingService implements IBankingService{
                 System.out.println("no account with this accountNumber");
             }
         }
+    }
+
+    @Override
+    public Account accountExistOrNot(String accountNumber) {
+        for(Account account : BankingService.accounts){
+            if(accountNumber.equals(account.getAccountNumber())){
+                return account;
+            }else{
+                throw new AccountNotExistExcepiton("There is not account with this account number: " + accountNumber);
+            }
+        }
+        return null;
     }
 }

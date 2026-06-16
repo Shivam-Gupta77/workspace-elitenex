@@ -28,7 +28,11 @@ public class BankingSystem {
         System.out.print("Enter Account Number: ");
         String accountNumber = sc.nextLine().toUpperCase();
 
-        bankingService.showDetails(accountNumber);
+        try{
+            bankingService.showDetails(accountNumber);
+        }catch (AccountNotExistExcepiton ex){
+            System.out.println(ex.getMessage());
+        }
     }
 
     private static void deposit(){
@@ -39,8 +43,12 @@ public class BankingSystem {
         double amount = sc.nextDouble();
         sc.nextLine();
 
-        bankingService.deposit(accountNumber, amount);
-
+        try{
+            bankingService.deposit(accountNumber, amount);
+        }catch (RuntimeException ex){
+            System.out.println(ex.getMessage());
+        }
+        
     }
 
     private static void withdraw(){
@@ -55,7 +63,23 @@ public class BankingSystem {
     }
 
     private static void transfer(){
-        System.out.println("transfer");
+        System.out.print("Enter Your Account Number: ");
+        String from = sc.nextLine().toUpperCase();
+
+        System.out.print("Enter Destination Account Number: ");
+        String to = sc.nextLine().toUpperCase();
+
+        System.out.print("Enter Transfer Amount: ");
+        double amount = sc.nextDouble();
+        sc.nextLine();
+
+        try{
+            bankingService.transfer(from, to, amount);
+            System.out.println("Transfer Successfully Account: " + from + " to: " + to);
+        }catch (RuntimeException e){
+            System.out.println("Something is wrong");
+        }
+
     }
 
     private static void statement(){
