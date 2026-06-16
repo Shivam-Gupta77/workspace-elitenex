@@ -5,8 +5,6 @@ import java.util.Scanner;
 
 public class BankingSystem {
 
-    static ArrayList<Account> accounts = new ArrayList<>();
-    static Random random = new Random();
     static Scanner sc = new Scanner(System.in);
     static BankingService bankingService = new BankingService();
 
