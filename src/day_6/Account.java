@@ -10,11 +10,13 @@ public class Account {
     private String accountNumber;
     private String holderName;
     private AccountType accountType;
+    private Date lastTransactionDate = new Date();
     private double balance;
     private final ArrayList<BankAccountTransaction> bankAccountTransactions=new ArrayList<>();
 
     public void deposit(double amount){
         balance += amount;
+        this.lastTransactionDate = new Date();
         bankAccountTransactions.add(new BankAccountTransaction(BankTransactionType.DEPOSIT,new Date(), amount ));
     }
 
@@ -101,5 +103,13 @@ public class Account {
                 ", accountType=" + accountType +
                 ", balance=" + balance +
                 '}';
+    }
+
+    public Date getLastTransactionDate() {
+        return lastTransactionDate;
+    }
+
+    public void setLastTransactionDate(Date lastTransactionDate) {
+        this.lastTransactionDate = lastTransactionDate;
     }
 }

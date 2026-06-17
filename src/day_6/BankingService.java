@@ -1,11 +1,13 @@
 package day_6;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Random;
 
 public class BankingService implements IBankingService{
     static ArrayList<Account> accounts = new ArrayList<>();
     static Random random = new Random();
+
 
     @Override
     public void createAccount(String holderName, AccountType accountType, double initialBalance) {
@@ -51,6 +53,7 @@ public class BankingService implements IBankingService{
             System.out.println("Account Number: " + account.getAccountNumber());
             System.out.println("Account Type: " + account.getAccountType());
             System.out.println("Your Balance: " + account.getBalance());
+            System.out.println("Last Transaction Date: " + account.getLastTransactionDate());
 
         }else{
             throw new AccountNotExistExcepiton("There is not account with this account number: " + accountNumber);
@@ -64,7 +67,8 @@ public class BankingService implements IBankingService{
         if(account != null){
             if(amount > 0){
                 account.deposit(amount);
-                System.out.println("Deposit successfully");
+                account.setLastTransactionDate(new Date());
+                System.out.println("Deposit successfully " + account.getLastTransactionDate());
             }else{
                 throw new AmountCannotBeNegative("Amount cannot be negative or zero");
             }
@@ -76,13 +80,20 @@ public class BankingService implements IBankingService{
     @Override
     public void withdraw(String accountNumber, double amount) {
         Account account = accountExistOrNot(accountNumber);
+        Date now = new Date();
+        long fifteenDays = 15L* 24 * 60 * 60 * 1000;
 
         if(account != null){
             if(amount < 0){
                 throw new AmountCannotBeNegative("Amount cannot be negative or zero");
             }
-            if(amount > account.getBalance()){
-                throw new AmountIsGreaterThanCurrentBalance("Amount is greater than current balance. Your current balance: " + account.getBalance());
+
+            if(now.getTime() - account.getLastTransactionDate().getTime() > fifteenDays){
+                throw new RuntimeException("Withdrawal denied: It has been more than 15 days since your last transaction.");
+            }
+
+            if((account.getBalance() - amount) < 1000){
+                throw new AmountIsGreaterThanCurrentBalance("Amount is greater than your minimum balance. Your current balance: " + account.getBalance());
             }
             account.withdraw(amount);
             System.out.println("Withdraw successfully");
