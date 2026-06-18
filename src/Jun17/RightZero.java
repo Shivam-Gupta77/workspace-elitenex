@@ -13,7 +13,7 @@ public class RightZero {
             }
         }
         // arr[i]=arr[i+1]
-        
+
         for(int i: result){
             System.out.print(i+",");
         }
