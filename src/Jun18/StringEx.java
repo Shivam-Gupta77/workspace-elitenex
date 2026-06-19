@@ -5,7 +5,17 @@ import java.util.Random;
 
 public class StringEx {
     public static void main(String[] args){
-        System.out.println(findLongestWord("hello shivam where are you going schooll"));
+        System.out.println(largestValue("12.32.12", "12.65.12"));
+    }
+
+
+    public static int largestValue(String s1, String s2){
+        s1 = s1.replace(".", "");
+        s2 = s2.replace(".", "");
+        int num1 = Integer.parseInt(s1);
+        int num2 = Integer.parseInt(s2);
+
+        return num1>num2 ? num1 : num2;
     }
 
     public static String findLongestWord(String sentance){
